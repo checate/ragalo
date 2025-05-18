@@ -1,0 +1,83 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { ImageIcon, VideoIcon, Heart } from "lucide-react";
+
+export default function RomanticTravelBlog() {
+  const [posts, setPosts] = useState([]);
+  const [form, setForm] = useState({
+    title: "",
+    imageUrl: "",
+    videoUrl: "",
+    description: "",
+  });
+
+  const addPost = () => {
+    if (form.title && (form.imageUrl || form.videoUrl || form.description)) {
+      setPosts([{ ...form, id: Date.now() }, ...posts]);
+      setForm({ title: "", imageUrl: "", videoUrl: "", description: "" });
+    }
+  };
+
+  return (
+    <div className="p-4 max-w-3xl mx-auto text-pink-800">
+      <h1 className="text-4xl font-bold text-center mb-6 flex items-center justify-center gap-2">
+        <Heart className="text-pink-500" /> Nuestros Momentos Románticos
+      </h1>
+
+      <div className="bg-pink-100 p-4 rounded-2xl shadow mb-8">
+        <h2 className="text-xl font-semibold mb-2">Agregar nuevo recuerdo</h2>
+        <Input
+          placeholder="Título del recuerdo"
+          className="mb-2"
+          value={form.title}
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
+        />
+        <Input
+          placeholder="URL de imagen (opcional)"
+          className="mb-2"
+          value={form.imageUrl}
+          onChange={(e) => setForm({ ...form, imageUrl: e.target.value })}
+        />
+        <Input
+          placeholder="URL de video (opcional)"
+          className="mb-2"
+          value={form.videoUrl}
+          onChange={(e) => setForm({ ...form, videoUrl: e.target.value })}
+        />
+        <Textarea
+          placeholder="Descripción o anécdota"
+          className="mb-2"
+          value={form.description}
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
+        />
+        <Button onClick={addPost} className="bg-pink-500 hover:bg-pink-600">
+          Guardar Recuerdo
+        </Button>
+      </div>
+
+      <div className="space-y-6">
+        {posts.map((post) => (
+          <Card key={post.id} className="bg-pink-50 rounded-2xl shadow">
+            <CardContent className="p-4">
+              <h3 className="text-2xl font-semibold mb-2">{post.title}</h3>
+              {post.imageUrl && (
+                <img src={post.imageUrl} alt="Recuerdo" className="mb-2 rounded-xl" />
+              )}
+              {post.videoUrl && (
+                <video
+                  src={post.videoUrl}
+                  controls
+                  className="mb-2 w-full rounded-xl"
+                ></video>
+              )}
+              <p>{post.description}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
